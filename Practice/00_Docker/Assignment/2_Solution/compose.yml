@@ -1,0 +1,33 @@
+version: '3.8'
+
+# Example solution:
+services:
+  py:
+    container_name: py 
+    image: python:3.11.5-bookworm
+    volumes:
+      - ./scripts/:/scripts/
+    stdin_open: true
+    tty: true 
+    environment:
+      SCRIPTS_PATH: /scripts # you can use 'docker exec py bash -c "pip install -r \${SCRIPTS_PATH}/requirements.txt"' to install the requirements file. Note: generally, it is better to create a custom image with the required packages installed. Otherwise, each time the container is spun up, the requirements need to be pulled and reinstalled.
+      API_PATH: http://api.open-notify.org/iss-now.json
+      MYSQL_PATH: mysql
+      MYSQL_USER: root
+      MYSQL_PASS: ${MYSQL_PASS} # this is read in from environment variable, or a .env file in the same location as the compose.yml file. NB! .env files should actually never go to version control due to security risk.
+      DB_NAME: iss
+      TABLE_NAME: iss_now
+  mysql:
+    container_name: mysql # this will be the "server" name in Adminer
+    image: mysql:8.0.34
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASS} # see above, this variable is taken from the .env file. You can use this for the "password" field in Adminer, "root" as "Username" and leave Database empty.
+    ports:
+      - 3306:3306 # default mysql port
+    volumes:
+      - ./mysql_data/:/var/lib/mysql/ # /var/lib/mysql is the default location for MySQL database files
+  adminer:
+    container_name: adminer 
+    image: adminer:4.8.1
+    ports:
+      - 8080:8080 # you can type localhost:8080 to your browser to access the Adminer UI
