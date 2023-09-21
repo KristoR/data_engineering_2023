@@ -20,7 +20,7 @@ You need to create 2 DAGs:
 2) #### "Order trigger"  
     Set up a sensor so that the DAG is triggered once the JSON file in 1) has been created.  
     Push the JSON payload into the order API. The API access and credentials are given to you in the forum.  
-    Occasionally, the API will return with an error. In such cases, wait 5 seconds and retry again, with a maximum 3 retries.  
+    Occasionally, the API will return with an error (503, Service Unavailable). In such cases, wait 5 seconds and retry again, with a maximum 3 retries.  
     Log all payloads and responses in the database.  
 
 The assignment is to be done individually.
